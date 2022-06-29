@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recent Blogs Test</title>
+
+    <!-- HEAD ADDITIONS (GENERAL TAB)-->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js"></script>
+    <script src="RecentBlogs.vue.js"></script>
+    <script>
+        const CONFIG = {
+            RECENT_BLOGS: {
+                RSS_URL: "https://app.steadytide.com/rss.pl?33814_21_Blog",
+                QTY: 5,
+                SHOW_THUMBNAILS: true,
+                DEFAULT_THUMBNAILS: [
+                    "https://www.thewowstyle.com/wp-content/uploads/2015/01/nature-images.jpg",
+                    "http://www.thewowstyle.com/wp-content/uploads/2015/01/house-in-green-field.jpg"
+                ],
+            }
+        }
+    </script>
+
+    <style>
+        #RecentBlogsVueWrapper .strb-blog-title {
+            font-weight: bold;
+            font-size: 1.1em;
+            font-family: sans-serif;
+        }
+        #RecentBlogsVueWrapper .strb-blog-blurb {
+            margin: 1em 0;
+        }
+    </style>
+    
+    <!-- END HEAD ADDITIONS -->
+</head>
+<body>
+        <!-- RECENT BLOGS
+        <section>
+            <h1>Recent Blogs</h1>
+            <div id="recentblogs"></div>
+            <script>insertRecentBlogs("recentblogs",CONFIG.RECENT_BLOGS)</script>
+        </section> -->
+
+
+        <input type="button" value="Run" onClick="run()" />
+
+        <script src="https://cdn.jsdelivr.net/gh/tanaikech/GetAccessTokenFromServiceAccount_js@master/getaccesstokengromserviceaccount_js.min.js"></script>
+        <script
+          async
+          defer
+          src="https://apis.google.com/js/api.js"
+          onload="this.onload=function(){};handleClientLoad()"
+          onreadystatechange="if (this.readyState === 'complete') this.onload()"
+        ></script>
+        <script>
+          // Please set the service account.
+          const object = {
+            "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQCj5mLIWpJd/Gex\nJT9va5YzLSfWTHzDvHM3jrQCo+KkY9K7ceJtuRxL9zytKQ7xiD883uJB25kmTPge\nfK9FT6Rz7FQN7260oRUEWllVa4qwiq45njx8WI1ApIxaoP0ayybIjUDQhMU4trVX\nea08SBmdlpZPvMrDGDKJSN/tZHd12FV4ySl1qY58dxXmpKXlSzGRtSYgU99+hGLa\nPIN8nA26B/4IcQ+sLg60ZKt3vSE2CHtwc5x+6KpOKxP1kk0I+Ed3PN64Qu9W1hOh\ntzOT/KEE9uEXPDlxcFG16L/6fKcuuyDpo6J/EXDBHGWFw8Tuq3vRowu1EAtP2w0K\najR/d/bpAgMBAAECggEAEl7f/ZhL8DrlSHFmAyVqSBbXRel8JoL4ixFJ/e3D7oG9\n0gK5dWuaegKei24fCFV+zmImYWlYE3dBwZu0wtkNaWzjcvho+S1WP2RSalpLyO6S\nXqTsyfyG6z2bpGDdCGQdgbx2DP6EuI70vnbwmDbLSuLhECjstSIA2sBkplAXel7K\nMNSASWvyCmXo4Z2FkeA4OUbkxwVrD+++/FGF3BjAur67/R4XkjwZSJQ10+AJ3/Un\n/YG4vdMal/T+hNK0QHvZmdPxWL/hxg4y1LBsMNnrVtFZVNgXsPv7Jz1VjC2Bdo+Q\nZgclVIlSZrWTk2kmuR55WlgXErj6Pp7cXfFovyaKnQKBgQDQV+iA9pZvvz3q5+lg\nxa9lcv+tXS7xhZmNvlJSdJZnioC+Y7pYCzrYWi/mrw4rlm2YA2Qs1KKYY4vVglh/\ni8von9rC8NYjjvY0WehfnpNWsFSk0pjxvTZJTRX7pydprw9P2UHuIGmyEJeCYFxC\nRDvevvYT+wTQ/r0dvY5Y3PBgSwKBgQDJY/m5JV+CASv/EK1VwauviXCvxVszUvRT\nfHq4zH/UUmuz6ObVWzzDfBwsXkE2YDMGLwZdzXpjo4So4NKhjC2/+xj/a+NW0CiE\nI4gHECk3iDkq6t8WjPA58pH8vgIoV5eX2o21T2ciX1drs80hNuNe0yC2/iDZDTOH\n59u6t24NGwKBgQCjMejOc9kcyTlv8p6tDcw49B5wJsipqRPBoq4LJoXVrvjvqWCC\nrLE4XVSeJss7u0Y3R5jFQP3nzjnvUX2O0uszWVvbTRj/m3EhSrephqY0xkRXIxto\nZ+TJABfTGnjV4Klmy3BIXZ1NPI/hMSezRI19CinpNrvsFU3/qMaCtvWXBwKBgDDc\n1fFLFRI48JDRXg0JkXtksHelPcyFGwzKjggabgV4/fLH1oH7whF4ImnNcKsdyiN8\n82F9Am38dap36gMSPONwrA8FAULF/J6a9F0qWaXEooI8PGZ/SaX1qeAVxfY90mUg\nvPM50b8wPMi/9kxRwfb26OAdZqDjKBaYdeKmsMfzAoGBAIw0wjMgQSbYKUOrIUI+\nISXQAhmvkcWPm8dYA3MfwgNKil3leW4B/5LUYyUYJ0GBjHMKHo7QeDX0j5Tq8Fua\npE6jk1gly34wIpm7y+DqKrgWBpk1i/tQj9UdpE64+lSLO7XZ5I2/lbbkbFwD0XZc\n0fJExhVvK9qCxXAh1lqaIc7U\n-----END PRIVATE KEY-----\n",
+            "client_email": "apexeffectserviceaccount@apexeffecttools.iam.gserviceaccount.com",
+            scopes: ["https://www.googleapis.com/auth/drive.readonly"],
+          };
+        
+          const handleClientLoad = () =>
+            gapi.load("client", async () => {
+                let token = await GetAccessTokenFromServiceAccount.do(object);
+                gapi.auth.setToken(token)
+            });
+        
+          function run() {
+            gapi.client
+              .init({
+                discoveryDocs: [
+                  "https://www.googleapis.com/discovery/v1/apis/drive/v3/rest",
+                ],
+              })
+              .then(() => {
+                gapi.client.drive.files
+                  .list({
+                    pageSize: 10,
+                    fields: "files(name)",
+                  })
+                  .then(({ body }) => {
+                    console.log(body);
+                  });
+              });
+          }
+        </script>
+
+    </div>
+
+</body>
+
+</html>
