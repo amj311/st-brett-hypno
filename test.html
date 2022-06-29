@@ -79,8 +79,10 @@
               .then(() => {
                 gapi.client.drive.files
                   .list({
-                    pageSize: 10,
-                    fields: "files(name)",
+                    supportsAllDrives: true,
+                    includeItemsFromAllDrives: true,
+                    fields: "files(name, id, kind)",
+                    q: `trashed = false`
                   })
                   .then(({ body }) => {
                     console.log(body);
