@@ -1,1 +1,0 @@
-Service account belongs to "ApexEffectTools" Project in brettjudd.com@gmail.com Google Cloud Portal.

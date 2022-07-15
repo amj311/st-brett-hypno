@@ -4,11 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "build": "npx webpack-cli",
+    "build:dev": "npx webpack-cli --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
-  "license": "ISC",
-  "dependencies": {
-    "googleapis": "^39.2.0"
-  }
+  "license": "ISC"
 }
