@@ -35,7 +35,7 @@ Vue.component('airtableplayer',{
     async mounted() {
         this.loading = true;
        
-        this.tracks = (await AirtableService.getAllTracks()).map(t => ({
+        this.tracks = (await AirtableService.getReleasedTracks()).map(t => ({
             ...t.fields,
             id: t.id,
             name: t.fields.display_name || t.fields.file_name.replace(/(.mp3)?(.mp4)?(.wav)?/gi, ''),
@@ -51,7 +51,7 @@ Vue.component('airtableplayer',{
 module.exports = function insertAirtableSync(elId,config) {
     let anchorEl = document.getElementById(elId);
     if (!anchorEl) return;
-    
+
     let html = /*html*/`
         <div id="AirtablePlayerInsert"><AirtablePlayer :config="config"></AirtablePlayer></div>
     `

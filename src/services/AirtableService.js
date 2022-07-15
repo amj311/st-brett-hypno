@@ -55,6 +55,12 @@ class AirtableService {
         }).all();
     };
 
+    async getReleasedTracks() {
+        return await this.base(TABLES.TRACKS).select({
+            view: "Released",
+        }).all();
+    };
+
     async saveNewTracks(tracks) {
         return await this.batchOperation(tracks, async batch => {
             return await this.base(TABLES.TRACKS).create(batch.map(t => this.prepareTrackObject(t)));
