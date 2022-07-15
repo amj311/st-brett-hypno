@@ -248,6 +248,8 @@ Vue.component('airtablesync',{
 
 module.exports = function insertAirtableSync(elId,config) {
     let anchorEl = document.getElementById(elId);
+    if (!anchorEl) return;
+    
     let html = /*html*/`
         <div id="RecentBlogInsert"><AirtableSync :config="config"></AirtableSync></div>
     `

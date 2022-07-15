@@ -50,6 +50,8 @@ Vue.component('airtableplayer',{
 
 module.exports = function insertAirtableSync(elId,config) {
     let anchorEl = document.getElementById(elId);
+    if (!anchorEl) return;
+    
     let html = /*html*/`
         <div id="AirtablePlayerInsert"><AirtablePlayer :config="config"></AirtablePlayer></div>
     `
