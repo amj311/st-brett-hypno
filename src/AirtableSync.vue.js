@@ -5,15 +5,20 @@ Vue.component('airtablesync',{
 
     <div id="AirtableSyncVueWrapper">
         <div v-html="stylesheet"></div>
+        <div class="header">
+            <img id="gdriveLogo" src="https://pngimg.com/uploads/google_drive/google_drive_PNG14.png" />
+            <img id="arrow" src="https://clipground.com/images/arrow-1.png" />
+            <img id="airtableLogo" src="https://seeklogo.com/images/A/airtable-logo-216B9AF035-seeklogo.com.png" />
+        </div>
+        <h1>Hypnotherapy Sync Tool</h1>
         
         <div v-if="loading">Loading ...</div>
         <div v-else>
             <div v-if="!syncing">
-                <button v-on:click="syncFiles">sync</button>
+                <a v-on:click="syncFiles" id="syncButton">Sync</a>
             </div>
-            <div class="strb-syncing">{{syncStatus}}</div>
-            <div v-for="msg in errorMessages">⚠ {{msg}}</div>
-
+            <div class="status">{{syncStatus}}</div>
+            <div v-for="msg in errorMessages" class="error">⚠ {{msg}}</div>
         </div>
     </div>`,
 
@@ -31,6 +36,44 @@ Vue.component('airtablesync',{
 
             stylesheet: /*html*/`
             <style>
+                body {
+                    font-family: sans-serif;
+                    text-align: center;
+                }
+                #AirtableSyncVueWrapper {
+                    margin: 0 auto;
+                    max-width: 40rem;
+                }
+                .header {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                }
+                .header img {
+                    width: 4em;
+                }
+                img#arrow {
+                    width: 2em;
+                    margin: 0 1em;
+                }
+                #syncButton {
+                    display: block;
+                    background: #00bbff;
+                    color: #fff;
+                    padding: .5em;
+                    border-radius: .5em;
+                    font-size: 1.25em;
+                    width: fit-content;
+                    margin: 1em auto;
+                    user-select: none;
+                    cursor: pointer;
+                }
+
+                .error {
+                    background: #ff000022;
+                    padding: 0.5em;
+                    margin: 0.5em;
+                }
             </style>
             `
         }
@@ -118,7 +161,7 @@ Vue.component('airtablesync',{
                     }
                 }
                 catch (error) {
-                    this.errorMessages.push("Error while loading files.");
+                    this.errorMessages.push("Error while loading files.", error);
                     throw {
                         stage: "Loading",
                         error,
@@ -168,7 +211,7 @@ Vue.component('airtablesync',{
                     console.log(this.newFiles, this.updatedFiles, this.deletedFiles)
                 }
                 catch (error) {
-                    this.errorMessages.push("Error while saving to Airtable.");
+                    this.errorMessages.push("Error while saving to Airtable.", error);
                     throw {
                         stage: "Saving",
                         error,

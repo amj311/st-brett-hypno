@@ -103,7 +103,7 @@ class AirtableService {
     prepareTrackObject(object) {
         return {
             id: object.tableFileId,
-            fields: {
+            fiels: {
                 file_name: object.name,
                 drive_id: object.id,
                 release_date: object.parentName?.match(/\d{4}-(0[1-9]|1[0-2])/g) ?
