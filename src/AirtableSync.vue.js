@@ -264,11 +264,6 @@ document.write(
     '<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.0.0/crypto-js.min.js"></script>'
 );
 
-// Load the airtable library
-document.write(
-    '<script src="https://cdn.jsdelivr.net/npm/airtable@0.11.4/lib/airtable.umd.min.js"></script>'
-);
-
 
 const GetAccessTokenFromServiceAccount = (function () {
 const _url = "https://www.googleapis.com/oauth2/v4/token";

@@ -1,3 +1,8 @@
+document.write(
+    '<script src="https://cdn.jsdelivr.net/npm/airtable@0.11.4/lib/airtable.umd.min.js"></script>'
+);
+
+
 // REQUIRES THE AIRTABLE SDK TO BE LOADED TO DOC PRIOR
 
 const TABLES = {
