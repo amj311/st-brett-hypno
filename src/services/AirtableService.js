@@ -106,6 +106,7 @@ class AirtableService {
             fields: {
                 file_name: object.name,
                 drive_id: object.id,
+                drive_folder: object.parentName,
                 release_date: object.parentName?.match(/\d{4}-(0[1-9]|1[0-2])/g) ?
                                 object.parentName : null,
                 deleted_from_drive: object.deleted_from_drive ?? false,

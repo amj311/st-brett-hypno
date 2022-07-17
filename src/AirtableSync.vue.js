@@ -128,9 +128,9 @@ Vue.component('airtablesync',{
                     let tableFiles = new Map((await AirtableService.getAllTracks()).map(f => [f.fields.drive_id, f]));
     
                     // Scan for changes
-    
                     for (let driveFile of driveFiles.values()) {
                         let tableMatch = tableFiles.get(driveFile.id);
+
                         // New Files
                         if (!tableMatch) {
                             this.newFiles.push(driveFile);
@@ -139,6 +139,11 @@ Vue.component('airtablesync',{
                             tableMatch._notDeleted = true;
                             driveFile.tableFileId = tableMatch.id;
                             
+                            // Changed parent folders
+                            if (tableMatch.fields.drive_folder !== driveFile.parentName) {
+                                this.updatedFiles.push(driveFile);
+                            }
+
                             // Restored Files
                             if (tableMatch.fields.deleted_from_drive) {
                                 tableMatch.fields.deleted_from_drive = false;
