@@ -1,36 +1,49 @@
-const AirtableService = require("./services/AirtableService");
-
+const AirtableService = require("../services/AirtableService");
+const TrackPlayer = require('./TrackPlayer.vue');
 
 Vue.component('airtableplayer',{
+    components: {TrackPlayer},
     template: /*html*/`
 
     <div id="AirtablePlayerVueWrapper">
         <div v-html="stylesheet"></div>
-        
-        <div v-if="loading">Loading...</div>
-        <div v-else>
+       
+        <div v-show="mode === 'browse'">
             <div v-for="track in tracks">
                 <div>{{track.name}}</div>
-                <audio controls="controls">
-                    <source :src="'https://docs.google.com/uc?export=download&id='+track.drive_id">
-                </audio>
-            </div>    
+                <button @click="playTrack(track)">Play</button>
+            </div>
         </div>
+        
+        <TrackPlayer v-show="mode === 'play'" :track="activeTrack" :autostart="true" @close="closePlayer" />
     </div>`,
 
+    props: ["config"],
+    
     data: function() {
         return {
+            mode: 'browse',
             tracks: [],
+            activeTrack: null,
             loading: true,
             
             stylesheet: /*html*/`
             <style>
+                #AirtablePlayerVueWrapper {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    height: 100%;
+                    width: 100%;
+                    display: flex;
+                    box-sizing: border-box;
+                    padding: 1em;
+                }
             </style>
             `
         }
     },
 
-    props: ["config"],
 
     async mounted() {
         this.loading = true;
@@ -45,10 +58,18 @@ Vue.component('airtableplayer',{
     },
 
     methods: {
+        playTrack(track) {
+            this.activeTrack = track;
+            this.mode = 'play';
+        },
+        closePlayer() {
+            this.activeTrack = null;
+            this.mode = 'browse';
+        }
     }
 });
 
-module.exports = function insertAirtableSync(elId,config) {
+module.exports = function insertAirtablePlayer(elId,config) {
     let anchorEl = document.getElementById(elId);
     if (!anchorEl) return;
 
