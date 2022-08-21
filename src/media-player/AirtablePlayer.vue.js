@@ -6,6 +6,7 @@ Vue.component('airtableplayer',{
     template: /*html*/`
 
     <div id="AirtablePlayerVueWrapper">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div v-html="stylesheet"></div>
        
         <div v-show="mode === 'browse'">
@@ -38,6 +39,7 @@ Vue.component('airtableplayer',{
                     display: flex;
                     box-sizing: border-box;
                     padding: 1em;
+                    background: #fff;
                 }
             </style>
             `

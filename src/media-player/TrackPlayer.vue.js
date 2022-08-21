@@ -8,7 +8,7 @@ const TrackPlayer = Vue.component('trackplayer',{
         <div v-html="stylesheet"></div>
 
         <div id="top-section">
-            <button @click="close">&times;</button>
+            <button @click="close"><i class="fa fa-times"></i></button>
         </div>
 
         <template v-if="track">
@@ -16,9 +16,9 @@ const TrackPlayer = Vue.component('trackplayer',{
         <div id="center-info">
             <div id="title">{{track.name}}</div>
             <div id="play-button">
-                <div v-if="isLoadingTrack">•••</div>
-                <div v-else-if="howl?.playing()" @click="pause">| |</div>
-                <div v-else @click="play">▶</div>
+                <div v-if="isLoadingTrack"><i class="fa fa-spinner fa-spin"></i></div>
+                <div v-else-if="howl?.playing()" @click="pause"><i class="fa fa-pause"></i></div>
+                <div v-else @click="play"><i class="fa fa-play"></i></div>
             </div>
         </div>
 
