@@ -7,6 +7,7 @@ document.write(
 
 const TABLES = {
     TRACKS: 'tblreK8W3yna7ZTXc',
+    CATEGORIES: 'tbl8CbCI2Igv8iDYl',
     SYNC: 'tblwc72Sfv7RRwF2Q',
 };
 
@@ -85,6 +86,10 @@ class AirtableService {
             })));
         })
     };
+
+    async getAllCategories() {
+        return await this.base(TABLES.CATEGORIES).select().all();
+    }
 
 
     async batchOperation(records, op) {

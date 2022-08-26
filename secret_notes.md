@@ -29,3 +29,6 @@ Service account belongs to "ApexEffectTools" Project in brettjudd.com@gmail.com 
   "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/apexeffectserviceaccount%40apexeffecttools.iam.gserviceaccount.com"
 }
 ```
+
+
+Removed Hypnosis subscribers send from email: brett@yourpracticetherapist.com

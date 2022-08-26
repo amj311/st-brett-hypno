@@ -51,6 +51,7 @@ const TrackPlayer = Vue.component('trackplayer',{
                     width: 100%;
                     display: flex;
                     flex-direction: column;
+                    padding: 1em;
                 }
                 #center-info {
                     flex-grow: 1;
@@ -64,7 +65,7 @@ const TrackPlayer = Vue.component('trackplayer',{
                     font-size: 2em;
                     margin: 1em;
                 }
-                #play-button {
+                #player-wrapper #play-button {
                     line-height: 3em;
                     width: 3em;
                     border-radius: 50%;
