@@ -82,6 +82,9 @@ const TrackList = Vue.component('tracklist',{
                 .row #play-button i {
                     font-size: .5em;
                 }
+                .row:not(:hover) #play-button {
+                    filter: grayscale(1);
+                }
                 
             </style>
             `

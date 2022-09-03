@@ -21,7 +21,7 @@ const TrackBrowser = Vue.component('trackbrowser',{
                 <TrackList :title="activeList.title" :tracks="activeList.tracks" @playTrack="playTrack"  />
             </div>
             <div v-else>
-                <h3>New Releases</h3>
+                <h3>Latest Releases</h3>
                 <TrackList :tracks="latestTracks" @playTrack="playTrack"  />
 
                 <h3>Categories</h3>
@@ -59,8 +59,6 @@ const TrackBrowser = Vue.component('trackbrowser',{
             stylesheet: /*html*/`
             <style>
                 #browser-wrapper {
-                    width: 100%;
-                    padding: 1em;
                     display: flex;
                     flex-direction: column;
                 }
@@ -178,23 +176,17 @@ const TrackBrowser = Vue.component('trackbrowser',{
         },
 
         latestTracks() {
-            let date = new Date();
-            let month = date.getMonth() + 1;
-            let yearMonth = `${date.getFullYear()}-${(month < 10 ? "0" : "") + month}`;
-
             let tracks = [];
-
-            if (this.tracksList.length === 0) {
-                return [];
-            }
 
             // This logic gleans the most recent portion of the tracksList from this month.
             // Requires a sorted list to work reliably.
             let i = this.tracksList.length-1;
-            while(this.tracksList[i].release_date >= yearMonth) {
+            let latestDate = this.tracksList[i].release_date;
+            while(this.tracksList[i].release_date === latestDate) {
                 tracks.push(this.tracksList[i]);
                 i--;
             }
+        
             return tracks;
         },
         
