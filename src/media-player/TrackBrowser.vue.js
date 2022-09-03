@@ -8,23 +8,40 @@ const TrackBrowser = Vue.component('trackbrowser',{
     <div id="browser-wrapper">
         <div v-html="stylesheet"></div>
 
-        <h3>New Releases</h3>
-        <TrackList :tracks="latestTracks" @playTrack="playTrack"  />
-
-        <h3>Categories</h3>
-        <div id="categories-wrapper">
-            <div v-for="category in categoriesList" class="cat-item-container">
-                <div class="cat-item" @click="openList(category.tracks, category.name)">
-                    <div class="thumb"><i :class="[category.icon_class]"></i></div>
-                    <div class="title">{{category.name}}</div>
-                </div>
-            </div>
+        <div v-if="loading" class="loading-screen">
+            <i class="fa fa-spinner fa-spin fa-2x"></i>
+            <br />
+            <br />
+            <span>Loading...</span>
         </div>
+        <div v-else>
+            <div v-if="activeList" id="active-list-wrapper">
+                <div @click="activeList = null;" class="list-closer"><i class="fa fa-arrow-left"></i> Go back</div>
+                <br/>
+                <TrackList :title="activeList.title" :tracks="activeList.tracks" @playTrack="playTrack"  />
+            </div>
+            <div v-else>
+                <h3>New Releases</h3>
+                <TrackList :tracks="latestTracks" @playTrack="playTrack"  />
 
-        <div v-if="activeList" id="active-list-wrapper">
-            <div @click="activeList = null;" class="list-closer"><i class="fa fa-arrow-left"></i> Go back</div>
-            <br/>
-            <TrackList :title="activeList.title" :tracks="activeList.tracks" @playTrack="playTrack"  />
+                <h3>Categories</h3>
+                <div id="categories-wrapper">
+                    <div v-for="category in categoriesList" class="cat-item-container">
+                        <div class="cat-item" @click="openList(category.tracks, category.name)">
+                            <div class="thumb"><i :class="[category.icon_class]"></i></div>
+                            <div class="title">{{category.name}}</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <h3>Previous Releases</h3>
+                <div id="releases-wrapper">
+                    <div v-for="release in releases" class="release-item" @click="openList(release.tracks, release.date)">
+                        {{release.date}}
+                    </div>
+                </div>
+                
+            </div>        
         </div>
         
     </div>`,
@@ -47,6 +64,10 @@ const TrackBrowser = Vue.component('trackbrowser',{
                     display: flex;
                     flex-direction: column;
                 }
+                .loading-screen {
+                    text-align: center;
+                    height: 10em;
+                }
                 #categories-wrapper {
                     display: flex;
                     flex-direction: row;
@@ -66,7 +87,7 @@ const TrackBrowser = Vue.component('trackbrowser',{
                 .cat-item .thumb {
                     width: 100px;
                     height: 100px;
-                    background: linear-gradient(325deg, #787ff6, #4adede);
+                    background: linear-gradient(325deg, #1ca7ec 30%, #4adede);
                     border-radius: .5em;
                     margin-bottom: .3em;
                     display: flex;
@@ -75,7 +96,18 @@ const TrackBrowser = Vue.component('trackbrowser',{
                 }
                 .cat-item .thumb i.fa {
                     font-size: 2em;
-                    color: #fff
+                    color: #fff;
+                }
+
+                .release-item {
+                    background: linear-gradient(325deg, #787ff6 0%, #1ca7ec);
+                    color: #fff;
+                    padding: 1em;
+                    border-radius: 0.5em;
+                    display: inline-block;
+                    margin: 0 1em 1em 0;
+                    cursor: pointer;
+                    user-select: none;
                 }
 
                 #active-list-wrapper {
@@ -86,11 +118,14 @@ const TrackBrowser = Vue.component('trackbrowser',{
                     height: 100%;
                     background: #fff;
                     padding: 1em;
+                    box-sizing: border-box;
                 }
                 .list-closer {
                     cursor: pointer;
                     user-select: none;
                 }
+
+               
             </style>
             `
         }
@@ -108,7 +143,7 @@ const TrackBrowser = Vue.component('trackbrowser',{
             ...t.fields,
             id: t.id,
             name: t.fields.display_name || t.fields.file_name.replace(/(.mp3)?(.mp4)?(.wav)?/gi, ''),
-            category: t.fields.category ? categories.get(t.fields.category[0]) : null
+            category_name: t.fields.category ? categories.get(t.fields.category[0]).name : null
         }]));
 
         for (let category of categories.values()) {
@@ -161,6 +196,22 @@ const TrackBrowser = Vue.component('trackbrowser',{
                 i--;
             }
             return tracks;
+        },
+        
+        releases() {
+            if (this.tracksList.length === 0) {
+                return [];
+            }
+
+            let releases = new Map();
+
+            for (let track of this.tracksList) {
+                if (releases.has(track.release_date)) {
+                    releases.get(track.release_date).push(track);
+                }
+                else releases.set(track.release_date, [track]);
+            }
+            return Array.from(releases.entries()).map(([date, tracks])=>({date,tracks}));
         }
     }
 });

@@ -69,12 +69,15 @@ const TrackPlayer = Vue.component('trackplayer',{
                     line-height: 3em;
                     width: 3em;
                     border-radius: 50%;
-                    background: #888;
+                    background: linear-gradient(325deg, #1ca7ec 30%, #4adede);
                     color: #fff;
                     text-align: center;
                     font-weight: bold;
                     cursor: pointer;
                     user-select: none;
+                }
+                .row:not(:hover) #play-button {
+                    filter: grayscale(1);
                 }
                 #play-button > div {
                     width: inherit;
@@ -91,7 +94,7 @@ const TrackPlayer = Vue.component('trackplayer',{
                     top: 0;
                     left: 0;
                     height: 100%;
-                    background: #aaa;
+                    background: linear-gradient(325deg, #1ca7ec 30%, #4adede);
                 }
                 #progress-info {
                     justify-content: space-between;

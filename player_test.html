@@ -15,7 +15,7 @@
 </head>
 <body>
         <section>
-            <div id="AirtablePlayer"></div>
+            <div id="AirtablePlayer" :name='Test' :tier="Free"></div>
             <script>
                 let {insertAirtablePlayer} = AirtableDriveUtils;
                 insertAirtablePlayer("AirtablePlayer")

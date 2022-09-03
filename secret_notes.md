@@ -32,3 +32,8 @@ Service account belongs to "ApexEffectTools" Project in brettjudd.com@gmail.com 
 
 
 Removed Hypnosis subscribers send from email: brett@yourpracticetherapist.com
+
+
+Hypno Communications email:
+Email Address: support@hypnosisofthemonth.com
+Password: BUbrxhO0

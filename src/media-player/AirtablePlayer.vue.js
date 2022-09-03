@@ -41,6 +41,7 @@ Vue.component('airtableplayer',{
 
     beforeMount() {
         this.$root.config = this.config;
+        console.log(this.config)
     },
 
 
@@ -56,9 +57,15 @@ Vue.component('airtableplayer',{
     }
 });
 
-module.exports = function insertAirtablePlayer(elId,config = {msg: "hello"}) {
+module.exports = function insertAirtablePlayer(elId, config = {}) {
     let anchorEl = document.getElementById(elId);
     if (!anchorEl) return;
+
+    for (let {name, value} of anchorEl.attributes) {
+        if (name.startsWith(":")) {
+            config[name.substring(1, name.length)] = value;
+        }
+    }
 
     let html = /*html*/`
         <div id="AirtablePlayerInsert"><AirtablePlayer :config="config"></AirtablePlayer></div>

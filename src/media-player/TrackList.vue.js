@@ -10,12 +10,14 @@ const TrackList = Vue.component('tracklist',{
             <span class="col"></span>
             <span class="col">Title</span>
             <span class="col">Category</span>
+            <span class="col">Release Date</span>
         </div>
 
         <div v-for="track in tracks" class="row">
             <div class="col" id="play-button" @click="playTrack(track)"><i class="fa fa-play"></i></div>
             <div class="col track-title" :title="track.name">{{track.name}}</div>
-            <div class="col track-category" :title="track.category?.name">{{track.category?.name}}</div>
+            <div class="col sub track-category" :title="track.category_name">{{track.category_name}}</div>
+            <div class="col sub track-release" title="d">{{fmtDate(track.release_date)}}</div>
         </div>
         
     </div>`,
@@ -38,32 +40,47 @@ const TrackList = Vue.component('tracklist',{
                 .row {
                     display: grid;
                     align-items: center;
-                    grid-template-columns: 1.5em 3fr 1fr;
-                    gap: .3em;
-                    padding: .3em 0;
+                    grid-template-columns: 1.5em 3fr 1fr 6em;
+                    gap: 1em;
+                    padding: .5em 0;
                     border-bottom: 1px solid #888;
                 }
+
+                .header .col {
+                    text-transform: uppercase;
+                    font-size: .8em;
+                    color: #000000dd;
+                }
                 
-                .col {
+                /*.col {
                     overflow: hidden;
                     text-overflow: ellipsis;
-                    white-space: no-break;
+                    white-space: nowrap;
+                }*/
+
+                .col.sub {
+                    font-size: .9em;
+                    color: #000000dd;
                 }
 
                 .row #play-button {
-                    line-height: 1.5em;
-                    width: 1.5em;
-                    font-size: 1em;
+                    height: 1em;
+                    width: 1em;
+                    font-size: 1.8em;
                     border-radius: 50%;
-                    background: linear-gradient(325deg, #787ff6, #4adede);
+                    background: linear-gradient(325deg, #1ca7ec 30%, #4adede);
                     color: #fff;
                     text-align: center;
                     font-weight: bold;
                     cursor: pointer;
                     user-select: none;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
                 }
                 .row #play-button i {
-                    font-size: .8em;
+                    font-size: .5em;
                 }
                 
             </style>
@@ -78,6 +95,11 @@ const TrackList = Vue.component('tracklist',{
         playTrack(track) {
             this.$emit('playTrack', track)    
         },
+
+        fmtDate(dateString) {
+            let date = new Date(dateString);
+            return `${date.getUTCMonth()+1}/${date.getUTCDate()}/${date.getUTCFullYear()}`
+        }
     },
 
     computed: {
