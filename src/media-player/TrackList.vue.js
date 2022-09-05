@@ -16,7 +16,11 @@ const TrackList = Vue.component('tracklist',{
         <div v-for="track in tracks" class="row">
             <div class="col" id="play-button" @click="playTrack(track)"><i class="fa fa-play"></i></div>
             <div class="col track-title" :title="track.name">{{track.name}}</div>
-            <div class="col sub track-category" :title="track.category_name">{{track.category_name}}</div>
+            <div class="col sub track-category" :title="track.category_name">
+                <span v-for="(category, i) in track.categories">
+                    {{category.name}}{{i < track.categories.length-1 ? ", " : ""}}
+                </span>
+            </div>
             <div class="col sub track-release" title="d">{{fmtDate(track.release_date)}}</div>
         </div>
         

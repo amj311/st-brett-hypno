@@ -134,6 +134,7 @@ const TrackBrowser = Vue.component('trackbrowser',{
 
         let categories = new Map((await AirtableService.getAllCategories()).map(c => [c.id, {
             ...c.fields,
+            id: c.id,
             icon_class: 'fa fa-'+c.fields.icon_name,
         }]));
 
@@ -141,7 +142,10 @@ const TrackBrowser = Vue.component('trackbrowser',{
             ...t.fields,
             id: t.id,
             name: t.fields.display_name || t.fields.file_name.replace(/(.mp3)?(.mp4)?(.wav)?/gi, ''),
-            category_name: t.fields.category ? categories.get(t.fields.category[0]).name : null
+            categories: t.fields.categories ? t.fields.categories.map(cid => {
+                let {id, name} = categories.get(cid);
+                return {id, name};
+            }) : []
         }]));
 
         for (let category of categories.values()) {
