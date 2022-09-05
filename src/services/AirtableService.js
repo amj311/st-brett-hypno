@@ -40,7 +40,6 @@ class AirtableService {
     };
 
     async saveSyncReport(created, updated, deleted) {
-        console.log(created, updated, deleted)
         return await this.base(TABLES.SYNC).create({
             date: Date.now(),
             created,

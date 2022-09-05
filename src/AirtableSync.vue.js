@@ -201,7 +201,6 @@ Vue.component('airtablesync',{
                         }
                     }
                     for (let track of updateRes) {
-                        console.log(track.fields)
                         let file = this.updatedFiles.find(f => f.id === track.fields.drive_id);
                         if (file) {
                             file.successMatch = track;
@@ -213,7 +212,6 @@ Vue.component('airtablesync',{
                             oldTrack.successMatch = track;
                         }
                     }
-                    console.log(this.newFiles, this.updatedFiles, this.deletedFiles)
                 }
                 catch (error) {
                     this.errorMessages.push("Error while saving to Airtable.", error);

@@ -85,7 +85,6 @@ Vue.component('airtableplayer',{
 
     beforeMount() {
         this.$root.config = this.config;
-        console.log(this.config)
     },
 
 
@@ -104,7 +103,6 @@ Vue.component('airtableplayer',{
         greeting() {
             let time;
             let hours = new Date().getHours();
-            console.log(hours)
             if (hours < 12) time = 'Morning';
             else if (hours < 17) time = 'Afternoon';
             else if (hours < 24) time = 'Evening';

@@ -176,13 +176,16 @@ const TrackBrowser = Vue.component('trackbrowser',{
         },
 
         latestTracks() {
+            if (this.tracksList.length < 0) {
+                return [];
+            }
             let tracks = [];
 
             // This logic gleans the most recent portion of the tracksList from this month.
             // Requires a sorted list to work reliably.
             let i = this.tracksList.length-1;
             let latestDate = this.tracksList[i].release_date;
-            while(this.tracksList[i].release_date === latestDate) {
+            while(i >= 0 && this.tracksList[i].release_date === latestDate) {
                 tracks.push(this.tracksList[i]);
                 i--;
             }
