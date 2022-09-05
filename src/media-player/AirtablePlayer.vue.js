@@ -9,13 +9,15 @@ Vue.component('airtableplayer',{
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
         <div v-html="stylesheet"></div>
        
-        <div class="welcome">
-            <h1>{{greeting}}</h1>
-        </div>
+        <div class="content-wrapper">
+            <div class="welcome">
+                <h1>{{greeting}}</h1>
+            </div>
 
-        <div class="content">
-            <TrackBrowser v-show="mode === 'browse'" @playTrack="playTrack"  />
-            <TrackPlayer v-show="mode === 'play'" :track="activeTrack" :autostart="true" @close="closePlayer" />
+            <div class="content">
+                <TrackBrowser v-show="mode === 'browse'" @playTrack="playTrack"  />
+                <TrackPlayer v-show="mode === 'play'" :track="activeTrack" :autostart="true" @close="closePlayer" />
+            </div>
         </div>
     </div>`,
 
@@ -64,6 +66,10 @@ Vue.component('airtableplayer',{
                     100%{background-position:0% 4%}
                 }
 
+                .content-wrapper {
+                    margin: 0 auto;
+                    max-width: 50em;
+                }
 
                 .welcome {
                     padding: 0 1em 1em 1em;
