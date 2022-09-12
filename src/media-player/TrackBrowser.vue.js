@@ -61,6 +61,7 @@ const TrackBrowser = Vue.component('trackbrowser',{
                 #browser-wrapper {
                     display: flex;
                     flex-direction: column;
+                    width: 100%;
                 }
                 .loading-screen {
                     text-align: center;
@@ -109,14 +110,7 @@ const TrackBrowser = Vue.component('trackbrowser',{
                 }
 
                 #active-list-wrapper {
-                    position: absolute;
-                    top: 0;
-                    left: 0;
                     width: 100%;
-                    height: 100%;
-                    background: #fff;
-                    padding: 1em;
-                    box-sizing: border-box;
                 }
                 .list-closer {
                     cursor: pointer;
