@@ -9,41 +9,40 @@ const TrackBrowser = Vue.component('trackbrowser',{
         <div v-html="stylesheet"></div>
 
         <div v-if="loading" class="loading-screen">
+            <br />
+            <br />
             <i class="fa fa-spinner fa-spin fa-2x"></i>
             <br />
             <br />
             <span>Loading...</span>
         </div>
-        <div v-else>
-            <div v-if="activeList" id="active-list-wrapper">
-                <div @click="activeList = null;" class="list-closer"><i class="fa fa-arrow-left"></i> Go back</div>
-                <br/>
-                <TrackList :title="activeList.title" :tracks="activeList.tracks" @playTrack="playTrack"  />
-            </div>
-            <div v-else>
-                <h3>Latest Releases</h3>
-                <TrackList :tracks="latestTracks" @playTrack="playTrack"  />
-
-                <h3>Categories</h3>
-                <div id="categories-wrapper">
-                    <div v-for="category in categoriesList" class="cat-item-container">
-                        <div class="cat-item" @click="openList(category.tracks, category.name)">
-                            <div class="thumb"><i :class="[category.icon_class]"></i></div>
-                            <div class="title">{{category.name}}</div>
-                        </div>
-                    </div>
-                </div>
-                
-                <h3>Previous Releases</h3>
-                <div id="releases-wrapper">
-                    <div v-for="release in releases" class="release-item" @click="openList(release.tracks, release.date)">
-                        {{release.date}}
-                    </div>
-                </div>
-                
-            </div>        
+        <div v-else-if="activeList" id="active-list-wrapper">
+            <div @click="activeList = null;" class="list-closer"><i class="fa fa-arrow-left"></i> Go back</div>
+            <br/>
+            <TrackList :title="activeList.title" :tracks="activeList.tracks" @playTrack="playTrack"  />
         </div>
+        <div v-else>
+            <h3>Latest Releases</h3>
+            <TrackList :tracks="latestTracks" @playTrack="playTrack"  />
+
+            <h3>Categories</h3>
+            <div id="categories-wrapper">
+                <div v-for="category in categoriesList" class="cat-item-container">
+                    <div class="cat-item" @click="openList(category.tracks, category.name)">
+                        <div class="thumb"><i :class="[category.icon_class]"></i></div>
+                        <div class="title">{{category.name}}</div>
+                    </div>
+                </div>
+            </div>
         
+            <h3>Previous Releases</h3>
+            <div id="releases-wrapper">
+                <div v-for="release in releases" class="release-item" @click="openList(release.tracks, release.date)">
+                    {{release.date}}
+                </div>
+            </div>
+
+        </div>        
     </div>`,
 
     props: [],
@@ -162,6 +161,7 @@ const TrackBrowser = Vue.component('trackbrowser',{
         openList(tracks, title) {
             this.activeList = {tracks, title};
         }
+
     },
 
     computed: {

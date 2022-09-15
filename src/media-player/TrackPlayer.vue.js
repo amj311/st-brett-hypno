@@ -1,5 +1,4 @@
-const AirtableService = require("../services/AirtableService");
-const {Howl, Howler} = require('howler');
+const {Howl} = require('howler');
 
 const TrackPlayer = Vue.component('trackplayer',{
     template: /*html*/`
@@ -8,31 +7,28 @@ const TrackPlayer = Vue.component('trackplayer',{
         <div v-html="stylesheet"></div>
 
         <div id="top-section">
-            <button @click="close"><i class="fa fa-times"></i></button>
+            <div class="bar-item button" @click="close"><i class="fa fa-times"></i></div>
         </div>
 
         <template v-if="track">
-       
-        <div id="center-info">
-            <div id="title">{{track.name}}</div>
-            <div id="play-button">
-                <div v-if="isLoadingTrack"><i class="fa fa-spinner fa-spin"></i></div>
-                <div v-else-if="howl?.playing()" @click="pause"><i class="fa fa-pause"></i></div>
-                <div v-else @click="play"><i class="fa fa-play"></i></div>
+            <div id="center-info">
+                <div id="title">{{track.name}}</div>
+                <div id="play-button">
+                    <div v-if="isLoadingTrack"><i class="fa fa-spinner fa-spin"></i></div>
+                    <div v-else-if="howl?.playing()" @click="pause"><i class="fa fa-pause"></i></div>
+                    <div v-else @click="play"><i class="fa fa-play"></i></div>
+                </div>
             </div>
-        </div>
 
-        <div id="progress-bar">
-            <div id="bars-wrapper">
-                <div id="playback-progress" class="bar" :style="{width: trackProgress+'%'}"></div>
+            <div id="progress-bar">
+                <div id="bars-wrapper">
+                    <div id="playback-progress" class="bar" :style="{width: trackProgress+'%'}"></div>
+                </div>
+                <div id="progress-info">
+                    <span>{{fmtMSS(howl.seek())}}</span>
+                    <span>{{fmtMSS(howl.duration())}}</span>
+                </div>
             </div>
-            <div id="progress-info">
-                <span>{{fmtMSS(howl.seek())}}</span>
-                <span>{{fmtMSS(howl.duration())}}</span>
-            </div>
-        </div>
-        
-
        </template>
     </div>`,
 
@@ -51,6 +47,14 @@ const TrackPlayer = Vue.component('trackplayer',{
                     width: 100%;
                     display: flex;
                     flex-direction: column;
+                }
+                #top-section .bar-item {
+                    display: inline-block;
+                    
+                    font-size: 1.5em;
+                    color: #555;
+                    margin: 0 .125em;
+                    cursor: pointer;
                 }
                 #center-info {
                     flex-grow: 1;
