@@ -13,10 +13,18 @@ const TrackPlayer = Vue.component('trackplayer',{
         <template v-if="track">
             <div id="center-info">
                 <div id="title">{{track.name}}</div>
-                <div id="play-button">
-                    <div v-if="isLoadingTrack"><i class="fa fa-spinner fa-spin"></i></div>
-                    <div v-else-if="howl?.playing()" @click="pause"><i class="fa fa-pause"></i></div>
-                    <div v-else @click="play"><i class="fa fa-play"></i></div>
+                <div id="center-controls">
+                    <div class="button" id="scrub-back" @click="()=>scrub(-10)">
+                        <i class="fa fa-undo"></i>
+                    </div>
+                    <div id="play-button">
+                        <div v-if="isLoadingTrack"><i class="fa fa-spinner fa-spin"></i></div>
+                        <div v-else-if="howl?.playing()" @click="pause"><i class="fa fa-pause"></i></div>
+                        <div v-else @click="play"><i class="fa fa-play"></i></div>
+                    </div>
+                    <div class="button" id="scrub-forward" @click="()=>scrub(10)">
+                        <i class="fa fa-repeat"></i>
+                    </div>
                 </div>
             </div>
 
@@ -82,6 +90,18 @@ const TrackPlayer = Vue.component('trackplayer',{
                 #play-button > div {
                     width: inherit;
                     line-height: inherit;
+                }
+                #center-controls {
+                    display: flex;
+                    align-items: center;
+                }
+
+                #center-controls .button {
+                    font-size: 1.5em;
+                    margin: 1em;
+                    opacity: .8;
+                    cursor: pointer;
+                    user-select: none;
                 }
                 #bars-wrapper {
                     display: relative;
@@ -154,6 +174,13 @@ const TrackPlayer = Vue.component('trackplayer',{
             this.howl.stop();
             this.updateProgress();
             this.stopAnimation();
+        },
+
+        scrub(delta) {
+            let time = this.howl.seek() + delta;
+            time = Math.max(0, time);
+            time = Math.min(this.howl.duration(), time);
+            this.howl.seek(time)
         },
 
         updateProgress() {
