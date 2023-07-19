@@ -22,28 +22,54 @@ Vue.component('airtablesync', {
 				<table><tbody>
 					<tr>
 						<th>Track</th>
-						<th>Airtable ID</th>
-						<th>Action</th>
+						<th>Category</th>
+						<th>Release Date</th>
 					</tr>
 					<tr v-for="file in this.newFiles">
 						<td>{{file.name}}</td>
-						<td>{{file.tableFileId}}</td>
-						<td>Create</td>
+						<td>{{file.categoryFolder}}</td>
+						<td>{{file.dateFolder}}</td>
+					</tr>
+				</tbody></table>
+				<b>Updated Tracks</b>
+				<table><tbody>
+					<tr>
+						<th>Track</th>
+						<th>Category</th>
+						<th>Release Date</th>
+						<th>Airtable ID</th>
 					</tr>
 					<tr v-for="file in this.updatedFiles">
 						<td>{{file.name}}</td>
+						<td>{{file.categoryFolder}}</td>
+						<td>{{file.dateFolder}}</td>
 						<td>{{file.tableFileId}}</td>
-						<td>Update</td>
+					</tr>
+				</tbody></table>
+				<b>Deleted Tracks</b>
+				<table><tbody>
+					<tr>
+						<th>Track</th>
+						<th>Airtable ID</th>
 					</tr>
 					<tr v-for="file in this.deletedFiles">
-						<td>{{file.name}}</td>
+						<td>{{file.fields.file_name}}</td>
 						<td>{{file.tableFileId}}</td>
-						<td>Delete</td>
 					</tr>
-					<tr v-for="file in this.deletedFiles">
+				</tbody></table>
+				<b>Restored Tracks</b>
+				<table><tbody>
+					<tr>
+						<th>Track</th>
+						<th>Category</th>
+						<th>Release Date</th>
+						<th>Airtable ID</th>
+					</tr>
+					<tr v-for="file in this.restoredFiles">
 						<td>{{file.name}}</td>
+						<td>{{file.categoryFolder}}</td>
+						<td>{{file.dateFolder}}</td>
 						<td>{{file.tableFileId}}</td>
-						<td>Restore</td>
 					</tr>
 				</tbody></table>
 			</div>
@@ -176,13 +202,13 @@ Vue.component('airtablesync', {
 						}
 
 						// Restored Files
-						if (tableMatch.fields.deleted_from_drive) {
+						else if (tableMatch.fields.deleted_from_drive) {
 							tableMatch.fields.deleted_from_drive = false;
 							this.updatedFiles.push(driveFile);
 						}
 
 						// Updated Files
-						if (!lastSync || lastSync.date < driveFile.modifiedTime) {
+						else if (!lastSync || lastSync.date < driveFile.modifiedTime) {
 							this.updatedFiles.push(driveFile);
 						}
 					}
@@ -192,6 +218,7 @@ Vue.component('airtablesync', {
 				for (let tableFile of tableFiles.values()) {
 					// Deleted Files
 					if (!tableFile.deleted_from_drive && !tableFile._notDeleted) {
+						console.log(tableFile)
 						this.deletedFiles.push(tableFile);
 					}
 				}
