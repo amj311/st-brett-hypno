@@ -144,7 +144,7 @@ const TrackBrowser = Vue.component('trackbrowser',{
         for (let category of categories.values()) {
             category.tracks = category.tracks?.map(id => {
                 return tracks.get(id)
-            });
+            }).filter(track => Boolean(track)); // filter tracks not shown from category
         };
 
         this.categories = categories;

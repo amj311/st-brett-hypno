@@ -11,6 +11,7 @@ const TrackList = Vue.component('tracklist',{
             <span class="col">Title</span>
             <span class="col">Category</span>
             <span class="col">Release Date</span>
+            <span class="col">Duration</span>
         </div>
 
         <div v-for="track in tracks" class="row">
@@ -22,6 +23,7 @@ const TrackList = Vue.component('tracklist',{
                 </span>
             </div>
             <div class="col sub track-release" title="d">{{fmtDate(track.release_date)}}</div>
+            <div class="col sub track-duration" title="d">{{fmtMSS(track.duration)}}</div>
         </div>
         
     </div>`,
@@ -44,7 +46,7 @@ const TrackList = Vue.component('tracklist',{
                 .row {
                     display: grid;
                     align-items: center;
-                    grid-template-columns: 1.5em 3fr 1fr 6em;
+                    grid-template-columns: 1.5em 3fr 1fr 6em 1fr;
                     gap: 1em;
                     padding: .5em 0;
                     border-bottom: 1px solid #888;
@@ -95,9 +97,6 @@ const TrackList = Vue.component('tracklist',{
         }
     },
 
-    async beforeMount() {
-    },
-
     methods: {
         playTrack(track) {
             this.$emit('playTrack', track)    
@@ -106,6 +105,16 @@ const TrackList = Vue.component('tracklist',{
         fmtDate(dateString) {
             let date = new Date(dateString);
             return `${date.getUTCMonth()+1}/${date.getUTCDate()}/${date.getUTCFullYear()}`
+        },
+
+		fmtMSS(seconds) {
+			if (!seconds) {
+				return "--:--";
+			}
+            var minutes = Math.floor(seconds / 60);
+            var seconds = Math.floor((seconds - minutes * 60));
+        
+            return minutes + ":" + (seconds<10 ? "0" : "") + seconds
         }
     },
 

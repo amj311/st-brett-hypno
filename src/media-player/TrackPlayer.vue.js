@@ -1,4 +1,5 @@
 const {Howl} = require('howler');
+const AirtableService = require("../services/AirtableService");
 
 const TrackPlayer = Vue.component('trackplayer',{
     template: /*html*/`
@@ -19,7 +20,7 @@ const TrackPlayer = Vue.component('trackplayer',{
                     </div>
                     <div id="play-button">
                         <div v-if="isLoadingTrack"><i class="fa fa-spinner fa-spin"></i></div>
-                        <div v-else-if="howl?.playing()" @click="pause"><i class="fa fa-pause"></i></div>
+                        <div v-else-if="activeHowl?.playing()" @click="pause"><i class="fa fa-pause"></i></div>
                         <div v-else @click="play"><i class="fa fa-play"></i></div>
                     </div>
                     <div class="button" id="scrub-forward" @click="()=>scrub(10)">
@@ -33,8 +34,8 @@ const TrackPlayer = Vue.component('trackplayer',{
                     <div id="playback-progress" class="bar" :style="{width: trackProgress+'%'}"></div>
                 </div>
                 <div id="progress-info">
-                    <span>{{fmtMSS(howl.seek())}}</span>
-                    <span>{{fmtMSS(howl.duration())}}</span>
+                    <span>{{fmtMSS(activeHowl?.seek())}}</span>
+                    <span>{{fmtMSS(activeHowl?.duration())}}</span>
                 </div>
             </div>
        </template>
@@ -45,7 +46,10 @@ const TrackPlayer = Vue.component('trackplayer',{
     data: function() {
         return {
             loading: false,
-            howl: null,
+            activeHowl: null,
+            legalHowl: null,
+			legalMode: true,
+            trackHowl: null,
             animation: null,
             trackProgress: 0,
             
@@ -127,11 +131,12 @@ const TrackPlayer = Vue.component('trackplayer',{
     },
 
     async mounted() {
+		this.loadLegal();
         this.handleNewTrack();
     },
 
     beforeDestroy() {
-        this.unload();
+        this.unloadTrack();
     },
 
     watch: {
@@ -139,52 +144,87 @@ const TrackPlayer = Vue.component('trackplayer',{
     },
 
     methods: {
+        loadLegal() {
+            this.legalHowl = new Howl({
+                src: [ 'https://docs.google.com/uc?export=download&id='+'1-nc2L0JdL2-SXMme_X_AXRX2D7pV1vic' ],
+                html5: true,
+                preload: true
+            });
+            this.legalHowl.load();
+            this.legalHowl.on('end', this.onEndLegal);
+			this.activeHowl = this.legalHowl;
+            // if (this.autostart) this.play();
+        },
+
+		enterLegal() {
+			this.legalMode = true;
+			this.activeHowl = this.legalHowl;
+            if (this.autostart) this.play();
+		},
+
+		onEndLegal() {
+			this.legalMode = false;
+			this.activeHowl = this.trackHowl;
+			this.trackHowl.seek(0);
+			this.trackHowl.play();
+		},
+
         handleNewTrack() {
-            this.unload();
+            this.unloadTrack();
             if (!this.track) return;
 
-            this.howl = new Howl({
+			this.setupTrack();
+			this.enterLegal();
+        },
+
+		setupTrack() {
+            this.trackHowl = new Howl({
                 src: [ 'https://docs.google.com/uc?export=download&id='+this.track.drive_id ],
                 html5: true,
-                preload: 'metadata'
+                preload: true
             });
-            this.howl.load();
-            this.howl.on('end', this.stop);
-            if (this.autostart) this.play();
-        },
+			this.trackHowl.on('load', () => {
+				if (!this.track?.duration) {
+					AirtableService.updateTrackDuration(this.track.id, this.trackHowl.duration())
+					this.track.duration = this.trackHowl.duration();
+				}
+			})
+            this.trackHowl.load();
+            this.trackHowl.on('end', this.stop);
+		},
         
-        unload() {
-            if (!this.howl) return;
-            this.howl.unload();
-            this.howl = null;
+        unloadTrack() {
+            if (!this.trackHowl) return;
+            this.trackHowl.unload();
+            this.trackHowl = null;
         },
         
 
         play() {
-            this.howl.play();
+            this.activeHowl.play();
             this.doAnimation();
         },
 
         pause() {
-            this.howl.pause();
+            this.activeHowl.pause();
             this.stopAnimation();
         },
 
         stop() {
-            this.howl.stop();
+            this.activeHowl.stop();
             this.updateProgress();
             this.stopAnimation();
         },
 
         scrub(delta) {
-            let time = this.howl.seek() + delta;
+            let time = this.activeHowl.seek() + delta;
             time = Math.max(0, time);
-            time = Math.min(this.howl.duration(), time);
-            this.howl.seek(time)
+            time = Math.min(this.activeHowl.duration(), time);
+            this.activeHowl.seek(time)
         },
 
         updateProgress() {
-            this.trackProgress = this.howl.state() === 'loaded' ? this.howl.seek() / this.howl.duration() * 100 : 0;
+            this.trackProgress = this.activeHowl.state() === 'loaded' ? this.activeHowl.seek() / this.activeHowl.duration() * 100 : 0;
         },
 
         doAnimation() {
@@ -196,7 +236,7 @@ const TrackPlayer = Vue.component('trackplayer',{
             this.animation = null;
         },
         onAnimationFrame() {
-            if (this.track && this.howl) {
+            if (this.activeHowl) {
                 this.updateProgress();
             } 
             this.animation = null;
@@ -205,12 +245,15 @@ const TrackPlayer = Vue.component('trackplayer',{
 
         close() {
             if (confirm("Are you sure you want to end this meditation?")) {
-                this.unload();
+                this.unloadTrack();
                 this.$emit('close')    
             }
         },
 
         fmtMSS(seconds) {
+			if (!seconds) {
+				return "--:--";
+			}
             var minutes = Math.floor(seconds / 60);
             var seconds = Math.floor((seconds - minutes * 60));
         
@@ -221,7 +264,7 @@ const TrackPlayer = Vue.component('trackplayer',{
 
     computed: {
         isLoadingTrack() {
-            return this.howl ? this.howl.state() !== 'loaded' : false;
+            return this.activeHowl ? this.activeHowl.state() !== 'loaded' : false;
         }
     }
 });

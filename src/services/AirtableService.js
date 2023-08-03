@@ -88,7 +88,12 @@ class AirtableService {
 
     async getAllCategories() {
         return await this.base(TABLES.CATEGORIES).select().all();
-    }
+    };
+
+
+	async updateTrackDuration(id, duration) {
+		await this.base(TABLES.TRACKS).update([{ id, fields: { duration } }]);
+	}
 
 
     async batchOperation(records, op) {
