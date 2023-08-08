@@ -39,11 +39,12 @@ class AirtableService {
         return res[0]?.fields;
     };
 
-    async saveSyncReport(created, updated, deleted) {
+    async saveSyncReport(created, updated, restored, deleted) {
         return await this.base(TABLES.SYNC).create({
             date: Date.now(),
             created,
             updated,
+            restored,
             deleted,
         });
     }
@@ -61,24 +62,34 @@ class AirtableService {
         }).all();
     };
 
-    async saveNewTracks(tracks) {
-        return await this.batchOperation(tracks, async batch => {
-            return await this.base(TABLES.TRACKS).create(batch.map(t => this.prepareTrackObject(t)));
+    async saveNewFiles(files) {
+        return await this.batchOperation(files, async batch => {
+            return await this.base(TABLES.TRACKS).create(batch.map(t => this.driveFileToRecord(t)));
         });
     };
 
 
-    async saveUpdatedTracks(tracks) {
-        return await this.batchOperation(tracks, async batch => {
-            return await this.base(TABLES.TRACKS).update(batch.map(t => this.prepareTrackObject(t)));
+    async saveUpdatedFiles(files) {
+        return await this.batchOperation(files, async batch => {
+            return await this.base(TABLES.TRACKS).update(batch.map(t => this.driveFileToRecord(t)));
+        });
+    };
+
+    async saveRestoredFiles(files) {
+        return await this.batchOperation(files, async batch => {
+            return await this.base(TABLES.TRACKS).update(batch.map(t => {
+				const record = this.driveFileToRecord(t);
+				record.fields.deleted_from_drive = false;
+				return record;
+			}));
         });
     };
 
 
-    async saveDeletedTracks(tracks) {
-        return await this.batchOperation(tracks, async batch => {
-            return await this.base(TABLES.TRACKS).update(batch.map(t => ({
-                "id": t.id,
+    async saveDeletedFiles(records) {
+        return await this.batchOperation(records, async batch => {
+            return await this.base(TABLES.TRACKS).update(batch.map(record => ({
+                "id": record.id,
                 "fields": {
                     deleted_from_drive: true,
                 }
@@ -109,16 +120,16 @@ class AirtableService {
         return res.flat(1);
     }
     
-    prepareTrackObject(object) {
+    driveFileToRecord(file) {
         return {
-            id: object.tableFileId,
+            id: file.recordId,
             fields: {
-                file_name: object.name,
-                drive_id: object.id,
-                drive_folder: object.parentName,
-                release_date: object.parentName?.match(/\d{4}-(0[1-9]|1[0-2])/g) ?
-                                object.parentName : null,
-                deleted_from_drive: object.deleted_from_drive ?? false,
+                file_name: file.name,
+                drive_id: file.id,
+                drive_folder: file.dateFolder,
+                release_date: file.dateFolder,
+                deleted_from_drive: file.deleted_from_drive ?? false,
+                duration: file.duration ?? undefined,
             }
         }
     }

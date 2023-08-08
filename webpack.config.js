@@ -4,7 +4,7 @@ const SRC_DIR = path.resolve(__dirname, 'src');
 const OUT_DIR = path.resolve(__dirname, 'dist');
 
 const config = {
-    mode: "production",
+    mode: "development",
     entry: SRC_DIR+"/index.js",
     output: {
         path: OUT_DIR,
