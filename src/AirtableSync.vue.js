@@ -535,7 +535,7 @@ Vue.component('airtablesync', {
 				syncRestore.length === 0 &&
 				syncDelete.length === 0
 			) {
-				this.syncStatus = "Nothing to sync.";
+				this.showMessage('info', "Nothing to sync.");
 				this.syncing = false
 				return;
 			}
