@@ -503,7 +503,7 @@ Vue.component('airtablesync', {
 
 				for (let record of tableRecords.values()) {
 					// Deleted Files
-					if (!record.deleted_from_drive && !record._notDeleted) {
+					if (!record.fields.deleted_from_drive && !record._notDeleted) {
 						this.recordsToDelete.push({record, doSync: true});
 					}
 				}
