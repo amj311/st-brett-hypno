@@ -386,6 +386,7 @@ Vue.component('airtablesync', {
 					top: 0;
 					left: 1em;
 					right: 1em;
+					height: 0;
 				}
 				.message {
 					width: fit-content;
